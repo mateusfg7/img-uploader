@@ -39,7 +39,6 @@ vscode:
     - bradlc.vscode-tailwindcss # Tailwind CSS IntelliSense
     - svelte.svelte-vscode # Svelte VSCode Support
 
-
 tasks:
   - name: Install Packages
     command: pnpm install
