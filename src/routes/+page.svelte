@@ -1,5 +1,6 @@
 <script lang="ts">
   import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
+  import { formatBytes } from '$lib';
 
   let imageString: string | undefined = 'https://github.com/mateusfg7.png';
   // let imageString: string | undefined;
@@ -22,18 +23,6 @@
     reader.onload = (e) => {
       imageString = e.target?.result as string;
     };
-  }
-
-  function formatBytes(bytes: number, decimals = 2) {
-    if (!+bytes) return '0 Bytes';
-
-    const k = 1024;
-    const dm = decimals < 0 ? 0 : decimals;
-    const sizes = ['Bytes', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
-
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-    return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
   }
 
   const removeImage = () => {
