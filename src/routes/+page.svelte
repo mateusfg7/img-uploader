@@ -1,8 +1,8 @@
 <script lang="ts">
   import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
 
-  // let imageString: string | undefined = 'https://github.com/mateusfg7.png';
-  let imageString: string | undefined;
+  let imageString: string | undefined = 'https://github.com/mateusfg7.png';
+  // let imageString: string | undefined;
   let fileInput: HTMLInputElement;
   let file: File | undefined;
   let isUploading = false;
@@ -57,7 +57,7 @@
     {#if imageString}
       <div class="flex flex-col items-center gap-3">
         <p class="text-2xl">Ready to upload</p>
-        <img src={imageString} alt="Uploaded" class="h-64 rounded-xl" />
+        <img src={imageString} alt="Uploaded" class="max-w-md object-cover max-h-64 rounded-xl" />
         <div class="flex items-center gap-3">
           <span class="flex items-center gap-1">
             <Image size="20" />
