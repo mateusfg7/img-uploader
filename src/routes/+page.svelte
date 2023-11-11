@@ -1,14 +1,16 @@
 <script lang="ts">
   import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
+  import { PUBLIC_IMGUR_CLIENT_ID } from '$env/static/public';
   import { formatBytes } from '$lib';
 
   import Title from '$lib/components/Title.svelte';
 
-  let imageString: string | undefined = 'https://github.com/mateusfg7.png';
-  // let imageString: string | undefined;
+  // let imageString: string | undefined = 'https://github.com/mateusfg7.png';
+  let imageString: string | undefined;
   let fileInput: HTMLInputElement;
   let file: File | undefined;
   let isUploading = false;
+  let successData: undefined | UploadResponseBody;
 
   const acceptedFormats = ['.jpeg', '.jpg', '.png', '.gif', '.webp'];
 
@@ -32,8 +34,47 @@
     file = undefined;
   };
 
-  function handleUpload() {
+  async function handleUpload() {
+    if (!file) {
+      console.log('ERR | No file selected');
+      return;
+    }
+    if (file.size > 1e7) {
+      console.log('ERR | Bigger file');
+      return;
+    }
+    if (isUploading) {
+      console.log('ERR | Already uploading');
+      return;
+    }
+
     isUploading = true;
+
+    const body = new FormData();
+    body.append('image', file);
+
+    const headers = new Headers();
+    headers.append('Authorization', `Client-ID ${PUBLIC_IMGUR_CLIENT_ID}`);
+
+    const requestOptions: RequestInit = {
+      method: 'POST',
+      redirect: 'follow',
+      body,
+      headers
+    };
+
+    const response: UploadResponseBody = await fetch(
+      'https://api.imgur.com/3/image',
+      requestOptions
+    )
+      .then((response) => response.json())
+      .catch((error) => console.log('error', error));
+
+    console.log(response);
+
+    isUploading = false;
+    file = undefined;
+    imageString = undefined;
   }
 </script>
 
