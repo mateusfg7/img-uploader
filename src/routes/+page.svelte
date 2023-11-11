@@ -2,6 +2,8 @@
   import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
   import { formatBytes } from '$lib';
 
+  import Title from '$lib/components/Title.svelte';
+
   let imageString: string | undefined = 'https://github.com/mateusfg7.png';
   // let imageString: string | undefined;
   let fileInput: HTMLInputElement;
@@ -36,10 +38,7 @@
 </script>
 
 <div class="max-w-lg m-auto space-y-10">
-  <div class="text-center">
-    <h1 class="text-4xl font-bold">Imgur Image Uploader</h1>
-    <p class="text-neutral-500">Upload your image below and directly receive a link for it.</p>
-  </div>
+  <Title />
   <div
     class="flex flex-col items-center justify-center w-full gap-6 p-6 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50"
   >
