@@ -28,3 +28,11 @@ type UploadResponseBody = {
   success: boolean;
   status: number;
 };
+
+type UploadErrorBody = {
+  data: {
+    error: string;
+  };
+  success: boolean;
+  status: number;
+};

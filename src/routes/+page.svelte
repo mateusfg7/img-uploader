@@ -1,16 +1,16 @@
 <script lang="ts">
-  import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
+  import { ImagePlus, Image, X, Loader2, Check, Copy, AlertTriangle } from 'lucide-svelte';
   import { PUBLIC_IMGUR_CLIENT_ID } from '$env/static/public';
   import { formatBytes } from '$lib';
 
   import Title from '$lib/components/Title.svelte';
 
-  // let imageString: string | undefined = 'https://github.com/mateusfg7.png';
   let imageString: string | undefined;
   let fileInput: HTMLInputElement;
   let file: File | undefined;
   let isUploading = false;
   let successData: undefined | UploadResponseBody;
+  let errorData: undefined | UploadErrorBody;
 
   const acceptedFormats = ['.jpeg', '.jpg', '.png', '.gif', '.webp'];
 
@@ -20,6 +20,10 @@
     }
   ) {
     if (!e.currentTarget.files) return;
+    if (isUploading) return;
+
+    successData = undefined;
+    errorData = undefined;
 
     file = e.currentTarget.files[0];
     let reader = new FileReader();
@@ -63,14 +67,18 @@
       headers
     };
 
-    const response: UploadResponseBody = await fetch(
+    const response: UploadResponseBody | UploadErrorBody = await fetch(
       'https://api.imgur.com/3/image',
       requestOptions
     )
       .then((response) => response.json())
       .catch((error) => console.log('error', error));
 
-    console.log(response);
+    if (response.success) {
+      successData = response as UploadResponseBody;
+    } else {
+      errorData = response as UploadErrorBody;
+    }
 
     isUploading = false;
     file = undefined;
@@ -86,7 +94,7 @@
     {#if imageString}
       <div class="flex flex-col items-center gap-3">
         <p class="text-2xl">Ready to upload</p>
-        <img src={imageString} alt="Uploaded" class="max-w-md object-cover max-h-64 rounded-xl" />
+        <img src={imageString} alt="Uploaded" class="object-cover max-w-md max-h-64 rounded-xl" />
         <div class="flex items-center gap-3">
           <span class="flex items-center gap-1">
             <Image size="20" />
@@ -132,6 +140,35 @@
       </div>
     {/if}
   </div>
+  {#if successData}
+    <div
+      class="flex items-center px-4 py-3 text-green-900 border border-green-100 bg-green-50 rounded-xl"
+    >
+      <div class="flex flex-col flex-1 gap-1">
+        <span class="flex items-center gap-3 text-lg">
+          <Check size="20" />
+          <span>Success</span>
+        </span>
+        <a href={successData.data.link} target="_blank" class="text-green-800 hover:text-green-700"
+          >{successData.data.link}</a
+        >
+      </div>
+      <button class="px-5 py-3 hover:text-green-700 active:text-green-900"><Copy /></button>
+    </div>
+  {/if}
+  {#if errorData}
+    <div
+      class="flex items-center gap-6 px-4 py-3 text-red-900 border border-red-100 bg-red-50 rounded-xl"
+    >
+      <AlertTriangle size="30" fill="rgba(127, 29, 29, 0.1)" />
+      <div>
+        <span class="flex items-center gap-3 text-lg">
+          <span><span class="font-bold">Error</span> {errorData.status}</span>
+        </span>
+        <span class="text-red-800">{errorData.data.error}</span>
+      </div>
+    </div>
+  {/if}
 </div>
 
 <input
