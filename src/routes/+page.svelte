@@ -1,18 +1,21 @@
 <script lang="ts">
   import { PUBLIC_IMGUR_CLIENT_ID } from '$env/static/public';
-  import { ImagePlus, Image, X, Loader2, AlertTriangle } from 'lucide-svelte';
+  import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
 
   import { formatBytes } from '$lib';
 
   import Title from '$lib/components/Title.svelte';
   import SuccessMessage from '$lib/components/SuccessMessage.svelte';
+  import ErrorMessage from '$lib/components/ErrorMessage.svelte';
 
   let imageString: string | undefined;
   let fileInput: HTMLInputElement;
   let file: File | undefined;
-  let isUploading = false;
+
   let successData: undefined | UploadResponseBody;
   let errorData: undefined | UploadErrorBody;
+
+  let isUploading = false;
 
   const acceptedFormats = ['.jpeg', '.jpg', '.png', '.gif', '.webp'];
 
@@ -90,6 +93,7 @@
 
 <div class="max-w-lg m-auto space-y-10">
   <Title />
+
   <div class="flex flex-col items-center justify-center w-full gap-6">
     {#if imageString}
       <div
@@ -149,21 +153,12 @@
       </button>
     {/if}
   </div>
+
   {#if successData}
     <SuccessMessage {successData} />
   {/if}
   {#if errorData}
-    <div
-      class="flex items-center gap-6 px-4 py-3 text-red-900 border border-red-100 bg-red-50 rounded-xl"
-    >
-      <AlertTriangle size="30" fill="rgba(127, 29, 29, 0.1)" />
-      <div>
-        <span class="flex items-center gap-3 text-lg">
-          <span><span class="font-bold">Error</span> {errorData.status}</span>
-        </span>
-        <span class="text-red-800">{errorData.data.error}</span>
-      </div>
-    </div>
+    <ErrorMessage {errorData} />
   {/if}
 </div>
 
