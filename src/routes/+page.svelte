@@ -8,6 +8,7 @@
   import Title from '$lib/components/Title.svelte';
 
   let imageString: string | undefined;
+  // let imageString: string | undefined = 'https://github.com/mateusfg7.png';
   let fileInput: HTMLInputElement;
   let file: File | undefined;
   let isUploading = false;
@@ -98,85 +99,92 @@
 
 <div class="max-w-lg m-auto space-y-10">
   <Title />
-  <div
-    class="flex flex-col items-center justify-center w-full gap-6 p-6 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50"
-  >
+  <div class="flex flex-col items-center justify-center w-full gap-6">
     {#if imageString}
-      <div class="flex flex-col items-center gap-3">
-        <p class="text-2xl">Ready to upload</p>
-        <img src={imageString} alt="Uploaded" class="object-cover max-w-md max-h-64 rounded-xl" />
-        <div class="flex items-center gap-3">
-          <span class="flex items-center gap-1">
-            <Image size="20" />
-            <span>
-              {file?.name} ({formatBytes(Number(file?.size))})
+      <div
+        class="flex flex-col items-center gap-10 p-6 h-full w-full border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50"
+      >
+        <div class="w-full flex flex-col gap-3 items-center">
+          <p class="text-2xl">Ready to upload</p>
+          <img src={imageString} alt="Uploaded" class="object-cover max-w-md max-h-64 rounded-xl" />
+          <div class="flex items-center gap-3">
+            <span class="flex items-center gap-1">
+              <Image size="20" />
+              <span>
+                {file?.name} ({formatBytes(Number(file?.size))})
+              </span>
             </span>
-          </span>
-          <button on:click={removeImage} class="transition-colors hover:text-red-500"
-            ><X size="20" /></button
-          >
+            <button on:click={removeImage} class="transition-colors hover:text-red-500"
+              ><X size="20" /></button
+            >
+          </div>
+        </div>
+        <div class="w-full flex justify-center">
+          {#if isUploading}
+            <button
+              disabled
+              class="flex items-center justify-center w-1/2 gap-2 p-3 text-lg text-white transition-colors bg-blue-800 cursor-wait rounded-xl opacity-90"
+            >
+              <Loader2 class="animate-spin" />
+              Uploading
+            </button>
+          {:else}
+            <button
+              on:click={handleUpload}
+              class="flex items-center justify-center w-1/2 p-3 text-lg text-white transition-colors bg-blue-800/90 rounded-xl hover:bg-blue-800"
+            >
+              Upload
+            </button>
+          {/if}
         </div>
       </div>
-      {#if isUploading}
-        <button
-          disabled
-          class="flex items-center justify-center w-1/2 gap-2 p-3 text-lg text-white transition-colors bg-blue-800 cursor-wait rounded-xl opacity-90"
-        >
-          <Loader2 class="animate-spin" />
-          Uploading
-        </button>
-      {:else}
-        <button
-          on:click={handleUpload}
-          class="flex items-center justify-center w-1/2 p-3 text-lg text-white transition-colors bg-blue-800/90 rounded-xl hover:bg-blue-800"
-        >
-          Upload
-        </button>
-      {/if}
     {:else}
-      <div class="flex flex-col items-center justify-center gap-2">
+      <button
+        class="flex flex-col items-center justify-center px-6 py-12 h-full w-full gap-2 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50 cursor-pointer"
+        on:click={() => {
+          fileInput.click();
+        }}
+      >
         <ImagePlus size="35" strokeWidth="1.5" />
         <div class="text-center">
           <p>
-            <button
+            <span
               class="font-bold text-blue-800 transition-colors cursor-pointer hover:text-blue-600"
-              on:click={() => {
-                fileInput.click();
-              }}>Upload a file</button
+              >Upload a file</span
             > or drag and drop
           </p>
           <p class="text-xs text-neutral-600">JPG, PNG, WEBP or GIF up to 10MB</p>
         </div>
-      </div>
+      </button>
     {/if}
   </div>
   {#if successData}
-  <div
-    class="flex items-center px-4 py-3 text-green-900 border border-green-100 bg-green-50 rounded-xl"
-  >
-    <div class="flex flex-col flex-1 gap-1">
-      <span class="flex items-center gap-3 text-lg">
-        <Check size="20" />
-        <span>Success</span>
-      </span>
-      <a href={successData?.data.link} target="_blank" class="text-green-800 hover:text-green-700"
-        >{successData?.data.link}</a
-      >
+    <div
+      class="flex items-center px-4 py-3 text-green-900 border border-green-100 bg-green-50 rounded-xl"
+    >
+      <div class="flex flex-col flex-1 gap-1">
+        <span class="flex items-center gap-3 text-lg">
+          <Check size="20" />
+          <span>Success</span>
+        </span>
+        <a href={successData?.data.link} target="_blank" class="text-green-800 hover:text-green-700"
+          >{successData?.data.link}</a
+        >
+      </div>
+      {#if showSuccessCopy}
+        <span class="px-2 py-3 font-bold">Copied!</span>
+      {:else}
+        <button
+          title="Copy to clipboard"
+          use:copy={{ text: String(successData?.data.link), events: 'click' }}
+          on:svelte-copy={showSuccessCopyMessage}
+          on:svelte-copy:error={(event) => {
+            alert(event.detail.message);
+          }}
+          class="px-5 py-3 hover:text-green-700 active:text-green-900"><Copy /></button
+        >
+      {/if}
     </div>
-    {#if showSuccessCopy}
-      <span class="px-2 py-3 font-bold">Copied!</span>
-    {:else}
-      <button
-        title="Copy to clipboard"
-        use:copy={{ text: String(successData?.data.link), events: 'click' }}
-        on:svelte-copy={showSuccessCopyMessage}
-        on:svelte-copy:error={(event) => {
-          alert(event.detail.message);
-        }}
-        class="px-5 py-3 hover:text-green-700 active:text-green-900"><Copy /></button
-      >
-    {/if}
-  </div>
   {/if}
   {#if errorData}
     <div
@@ -200,4 +208,3 @@
   bind:this={fileInput}
   class="hidden"
 />
-
