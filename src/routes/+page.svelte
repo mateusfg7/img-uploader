@@ -113,6 +113,14 @@
   }
 </script>
 
+<svelte:head>
+  <title>Imgur Image Uploader</title>
+  <meta
+    name="description"
+    content="Upload your image and directly receive a link for it from Imgur API."
+  />
+</svelte:head>
+
 <div class="max-w-lg m-auto space-y-10">
   <Title />
 
