@@ -15,10 +15,10 @@
 </script>
 
 <div
-  class="flex items-center px-4 py-3 text-green-900 border border-green-100 bg-green-50 rounded-xl"
+  class="flex items-center px-4 py-3 text-green-900 bg-green-50 rounded-xl border border-green-100"
 >
   <div class="flex flex-col flex-1 gap-1">
-    <span class="flex items-center gap-3 text-lg">
+    <span class="flex gap-3 items-center text-lg">
       <Check size="20" />
       <span>Success</span>
     </span>

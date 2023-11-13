@@ -121,19 +121,19 @@
   />
 </svelte:head>
 
-<div class="max-w-lg m-auto space-y-10">
+<div class="m-auto space-y-10 max-w-lg">
   <Title />
 
-  <div class="flex flex-col items-center justify-center w-full gap-6">
+  <div class="flex flex-col gap-6 justify-center items-center w-full">
     {#if imageString}
       <div
-        class="flex flex-col items-center gap-10 p-6 h-full w-full border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50"
+        class="flex flex-col gap-10 items-center p-6 w-full h-full rounded-xl border border-dashed border-neutral-500 bg-neutral-100/50"
       >
-        <div class="w-full flex flex-col gap-3 items-center">
+        <div class="flex flex-col gap-3 items-center w-full">
           <p class="text-2xl">Ready to upload</p>
           <img src={imageString} alt="Uploaded" class="object-cover max-w-md max-h-64 rounded-xl" />
-          <div class="flex items-center gap-3">
-            <span class="flex items-center gap-1">
+          <div class="flex gap-3 items-center">
+            <span class="flex gap-1 items-center">
               <Image size="20" />
               <span>
                 {file?.name} ({formatBytes(Number(file?.size))})
@@ -144,11 +144,11 @@
             >
           </div>
         </div>
-        <div class="w-full flex justify-center">
+        <div class="flex justify-center w-full">
           {#if isUploading}
             <button
               disabled
-              class="flex items-center justify-center w-1/2 gap-2 p-3 text-lg text-white transition-colors bg-blue-800 cursor-wait rounded-xl opacity-90"
+              class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white bg-blue-800 rounded-xl opacity-90 transition-colors cursor-wait"
             >
               <Loader2 class="animate-spin" />
               Uploading
@@ -156,7 +156,7 @@
           {:else}
             <button
               on:click={handleUpload}
-              class="flex items-center justify-center w-1/2 p-3 text-lg text-white transition-colors bg-blue-800/90 rounded-xl hover:bg-blue-800"
+              class="flex justify-center items-center p-3 w-1/2 text-lg text-white rounded-xl transition-colors bg-blue-800/90 hover:bg-blue-800"
             >
               Upload
             </button>
