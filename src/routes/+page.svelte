@@ -1,29 +1,20 @@
 <script lang="ts">
   import { PUBLIC_IMGUR_CLIENT_ID } from '$env/static/public';
-  import { ImagePlus, Image, X, Loader2, Check, Copy, AlertTriangle } from 'lucide-svelte';
-  import { copy } from 'svelte-copy';
+  import { ImagePlus, Image, X, Loader2, AlertTriangle } from 'lucide-svelte';
 
   import { formatBytes } from '$lib';
 
   import Title from '$lib/components/Title.svelte';
+  import SuccessMessage from '$lib/components/SuccessMessage.svelte';
 
   let imageString: string | undefined;
-  // let imageString: string | undefined = 'https://github.com/mateusfg7.png';
   let fileInput: HTMLInputElement;
   let file: File | undefined;
   let isUploading = false;
   let successData: undefined | UploadResponseBody;
   let errorData: undefined | UploadErrorBody;
-  let showSuccessCopy = false;
 
   const acceptedFormats = ['.jpeg', '.jpg', '.png', '.gif', '.webp'];
-
-  function showSuccessCopyMessage() {
-    showSuccessCopy = true;
-    setTimeout(() => {
-      showSuccessCopy = false;
-    }, 2000);
-  }
 
   function onFileSelected(
     e: Event & {
@@ -159,32 +150,7 @@
     {/if}
   </div>
   {#if successData}
-    <div
-      class="flex items-center px-4 py-3 text-green-900 border border-green-100 bg-green-50 rounded-xl"
-    >
-      <div class="flex flex-col flex-1 gap-1">
-        <span class="flex items-center gap-3 text-lg">
-          <Check size="20" />
-          <span>Success</span>
-        </span>
-        <a href={successData?.data.link} target="_blank" class="text-green-800 hover:text-green-700"
-          >{successData?.data.link}</a
-        >
-      </div>
-      {#if showSuccessCopy}
-        <span class="px-2 py-3 font-bold">Copied!</span>
-      {:else}
-        <button
-          title="Copy to clipboard"
-          use:copy={{ text: String(successData?.data.link), events: 'click' }}
-          on:svelte-copy={showSuccessCopyMessage}
-          on:svelte-copy:error={(event) => {
-            alert(event.detail.message);
-          }}
-          class="px-5 py-3 hover:text-green-700 active:text-green-900"><Copy /></button
-        >
-      {/if}
-    </div>
+    <SuccessMessage {successData} />
   {/if}
   {#if errorData}
     <div
