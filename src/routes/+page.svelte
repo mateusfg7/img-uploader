@@ -16,6 +16,7 @@
   let errorData: undefined | UploadErrorBody;
 
   let isUploading = false;
+  let isDragging = false;
 
   const acceptedFormats = ['.jpeg', '.jpg', '.png', '.gif', '.webp'];
 
@@ -31,6 +32,27 @@
     errorData = undefined;
 
     file = e.currentTarget.files[0];
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = (e) => {
+      imageString = e.target?.result as string;
+    };
+  }
+
+  function onDropFile(
+    e: DragEvent & {
+      currentTarget: EventTarget & HTMLButtonElement;
+    }
+  ) {
+    if (isUploading) return;
+    if (!e.dataTransfer) return;
+    if (e.dataTransfer.files.length == 0) return;
+
+    successData = undefined;
+    errorData = undefined;
+    isDragging = false;
+
+    file = e.dataTransfer.files[0];
     let reader = new FileReader();
     reader.readAsDataURL(file);
     reader.onload = (e) => {
@@ -135,7 +157,12 @@
       </div>
     {:else}
       <button
-        class="flex flex-col items-center justify-center px-6 py-12 h-full w-full gap-2 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50 cursor-pointer"
+        class="flex flex-col items-center justify-center px-6 py-12 h-full w-full gap-2 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50 cursor-pointer data-[is-dragging='true']:bg-blue-100/50 data-[is-dragging='true']:border-blue-800 transition-colors"
+        data-is-dragging={isDragging}
+        on:dragenter|preventDefault={() => (isDragging = true)}
+        on:dragleave|preventDefault={() => (isDragging = false)}
+        on:dragover|preventDefault={() => (isDragging = true)}
+        on:drop|preventDefault={onDropFile}
         on:click={() => {
           fileInput.click();
         }}
