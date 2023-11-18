@@ -1,6 +1,6 @@
 <script lang="ts">
   import { PUBLIC_IMGUR_CLIENT_ID } from '$env/static/public';
-  import { ImagePlus, Image, X, Loader2 } from 'lucide-svelte';
+  import { ImagePlus, Image, X, Loader2, Upload } from 'lucide-svelte';
 
   import { formatBytes } from '$lib';
 
@@ -154,7 +154,7 @@
             {#if isUploading}
               <button
                 disabled
-                class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white bg-blue-800 rounded-xl opacity-90 transition-colors cursor-wait"
+                class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white bg-blue-800 rounded-xl opacity-70 transition-colors cursor-wait"
               >
                 <Loader2 class="animate-spin" />
                 Uploading
@@ -162,8 +162,9 @@
             {:else}
               <button
                 on:click={handleUpload}
-                class="flex justify-center items-center p-3 w-1/2 text-lg text-white rounded-xl transition-colors bg-blue-800/90 hover:bg-blue-800"
+                class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white rounded-xl transition-colors bg-blue-800/90 hover:bg-blue-800"
               >
+                <Upload />
                 Upload
               </button>
             {/if}
