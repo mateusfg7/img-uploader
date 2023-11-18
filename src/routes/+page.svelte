@@ -7,6 +7,7 @@
   import Title from '$lib/components/Title.svelte';
   import SuccessMessage from '$lib/components/SuccessMessage.svelte';
   import ErrorMessage from '$lib/components/ErrorMessage.svelte';
+  import Footer from '$lib/components/Footer.svelte';
 
   let imageString: string | undefined;
   let fileInput: HTMLInputElement;
@@ -121,86 +122,94 @@
   />
 </svelte:head>
 
-<div class="m-auto space-y-10 max-w-lg">
-  <Title />
+<div class="flex flex-col gap-10 justify-between items-center p-10 min-h-screen">
+  <div class="space-y-10 max-w-lg">
+    <Title />
 
-  <div class="flex flex-col gap-6 justify-center items-center w-full">
-    {#if imageString}
-      <div
-        class="flex flex-col gap-10 items-center p-6 w-full h-full rounded-xl border border-dashed border-neutral-500 bg-neutral-100/50"
-      >
-        <div class="flex flex-col gap-3 items-center w-full">
-          <p class="text-2xl">Ready to upload</p>
-          <img src={imageString} alt="Uploaded" class="object-cover max-w-md max-h-64 rounded-xl" />
-          <div class="flex gap-3 items-center">
-            <span class="flex gap-1 items-center">
-              <Image size="20" />
-              <span>
-                {file?.name} ({formatBytes(Number(file?.size))})
+    <div class="flex flex-col gap-6 justify-center items-center w-full">
+      {#if imageString}
+        <div
+          class="flex flex-col gap-10 items-center p-6 w-full h-full rounded-xl border border-dashed border-neutral-500 bg-neutral-100/50"
+        >
+          <div class="flex flex-col gap-3 items-center w-full">
+            <p class="text-2xl">Ready to upload</p>
+            <img
+              src={imageString}
+              alt="Uploaded"
+              class="object-cover max-w-md max-h-64 rounded-xl"
+            />
+            <div class="flex gap-3 items-center">
+              <span class="flex gap-1 items-center">
+                <Image size="20" />
+                <span>
+                  {file?.name} ({formatBytes(Number(file?.size))})
+                </span>
               </span>
-            </span>
-            <button on:click={removeImage} class="transition-colors hover:text-red-500"
-              ><X size="20" /></button
-            >
+              <button on:click={removeImage} class="transition-colors hover:text-red-500"
+                ><X size="20" /></button
+              >
+            </div>
+          </div>
+          <div class="flex justify-center w-full">
+            {#if isUploading}
+              <button
+                disabled
+                class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white bg-blue-800 rounded-xl opacity-90 transition-colors cursor-wait"
+              >
+                <Loader2 class="animate-spin" />
+                Uploading
+              </button>
+            {:else}
+              <button
+                on:click={handleUpload}
+                class="flex justify-center items-center p-3 w-1/2 text-lg text-white rounded-xl transition-colors bg-blue-800/90 hover:bg-blue-800"
+              >
+                Upload
+              </button>
+            {/if}
           </div>
         </div>
-        <div class="flex justify-center w-full">
-          {#if isUploading}
-            <button
-              disabled
-              class="flex gap-2 justify-center items-center p-3 w-1/2 text-lg text-white bg-blue-800 rounded-xl opacity-90 transition-colors cursor-wait"
-            >
-              <Loader2 class="animate-spin" />
-              Uploading
-            </button>
-          {:else}
-            <button
-              on:click={handleUpload}
-              class="flex justify-center items-center p-3 w-1/2 text-lg text-white rounded-xl transition-colors bg-blue-800/90 hover:bg-blue-800"
-            >
-              Upload
-            </button>
-          {/if}
-        </div>
-      </div>
-    {:else}
-      <button
-        class="flex flex-col items-center justify-center px-6 py-12 h-full w-full gap-2 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50 cursor-pointer data-[is-dragging='true']:bg-blue-100/50 data-[is-dragging='true']:border-blue-800 transition-colors"
-        data-is-dragging={isDragging}
-        on:dragenter|preventDefault={() => (isDragging = true)}
-        on:dragleave|preventDefault={() => (isDragging = false)}
-        on:dragover|preventDefault={() => (isDragging = true)}
-        on:drop|preventDefault={onDropFile}
-        on:click={() => {
-          fileInput.click();
-        }}
-      >
-        <ImagePlus size="35" strokeWidth="1.5" />
-        <div class="text-center">
-          <p>
-            <span
-              class="font-bold text-blue-800 transition-colors cursor-pointer hover:text-blue-600"
-              >Upload a file</span
-            > or drag and drop
-          </p>
-          <p class="text-xs text-neutral-600">JPG, PNG, WEBP or GIF up to 10MB</p>
-        </div>
-      </button>
+      {:else}
+        <button
+          class="flex flex-col items-center justify-center px-6 py-12 h-full w-full gap-2 border border-dashed rounded-xl border-neutral-500 bg-neutral-100/50 cursor-pointer data-[is-dragging='true']:bg-blue-100/50 data-[is-dragging='true']:border-blue-800 transition-colors"
+          data-is-dragging={isDragging}
+          on:dragenter|preventDefault={() => (isDragging = true)}
+          on:dragleave|preventDefault={() => (isDragging = false)}
+          on:dragover|preventDefault={() => (isDragging = true)}
+          on:drop|preventDefault={onDropFile}
+          on:click={() => {
+            fileInput.click();
+          }}
+        >
+          <ImagePlus size="35" strokeWidth="1.5" />
+          <div class="text-center">
+            <p>
+              <span
+                class="font-bold text-blue-800 transition-colors cursor-pointer hover:text-blue-600"
+                >Upload a file</span
+              > or drag and drop
+            </p>
+            <p class="text-xs text-neutral-600">JPG, PNG, WEBP or GIF up to 10MB</p>
+          </div>
+        </button>
+      {/if}
+    </div>
+
+    {#if successData}
+      <SuccessMessage {successData} />
     {/if}
+    {#if errorData}
+      <ErrorMessage {errorData} />
+    {/if}
+
+    <input
+      type="file"
+      accept={acceptedFormats.join(',')}
+      on:change={(e) => onFileSelected(e)}
+      bind:this={fileInput}
+      class="hidden"
+    />
   </div>
 
-  {#if successData}
-    <SuccessMessage {successData} />
-  {/if}
-  {#if errorData}
-    <ErrorMessage {errorData} />
-  {/if}
+  <Footer />
 </div>
-
-<input
-  type="file"
-  accept={acceptedFormats.join(',')}
-  on:change={(e) => onFileSelected(e)}
-  bind:this={fileInput}
-  class="hidden"
-/>
