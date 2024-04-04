@@ -6,8 +6,8 @@ settings:
 
 dependencies:
   lucide-svelte:
-    specifier: ^0.301.0
-    version: 0.301.0(svelte@4.2.12)
+    specifier: ^0.364.0
+    version: 0.364.0(svelte@4.2.12)
   svelte-copy:
     specifier: ^1.4.1
     version: 1.4.1(svelte@4.2.12)
@@ -1668,10 +1668,10 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-svelte@0.301.0(svelte@4.2.12):
-    resolution: {integrity: sha512-rRfNpmesNa4LgfAhgrgyI8RpA9s/An8XhxthET59gWioV2ZJi30zljxeYR7TvK6fG1MfDsuTkB/pyxSrvzz6Kw==}
+  /lucide-svelte@0.364.0(svelte@4.2.12):
+    resolution: {integrity: sha512-Zz0WDI5NeyLd6s8KHJ5uww3Js7JJEaYt/RNxKCIqy3cZKdKj7f3RnSQuhFOJfpWyoZFYvcXDC9zPKykSed6dyA==}
     peerDependencies:
-      svelte: '>=3 <5'
+      svelte: ^3 || ^4 || ^5.0.0-next.42
     dependencies:
       svelte: 4.2.12
     dev: false
