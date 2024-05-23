@@ -10,7 +10,7 @@ dependencies:
     version: 0.364.0(svelte@4.2.15)
   svelte-copy:
     specifier: ^1.4.1
-    version: 1.4.1(svelte@4.2.15)
+    version: 1.4.2(svelte@4.2.15)
 
 devDependencies:
   '@sveltejs/adapter-auto':
@@ -2483,8 +2483,8 @@ packages:
       - sugarss
     dev: true
 
-  /svelte-copy@1.4.1(svelte@4.2.15):
-    resolution: {integrity: sha512-ixNNlTfIQWYnQzE0pdMYVCS/2jzMhXm41jmtSvk8EK2Dh+B5sDFEz2xYYo4fVtwtK0dLW5M5ZH/Rs5Jah0r6dw==}
+  /svelte-copy@1.4.2(svelte@4.2.15):
+    resolution: {integrity: sha512-Q99JvWDzB58JlbVWX2VxjHX/CQ5ayDLUGGJgL2EqU1+3c9CDOtxLrKFZx5CVN5bN/DDl62nxtazz0j3nGX1Xew==}
     peerDependencies:
       svelte: ^3.55.0 || ^4.0.0
     dependencies:
